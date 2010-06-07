@@ -22,7 +22,7 @@ module DataMigrations
         ActiveRecord::Base.connection.create_table(sm_table, :id => false) do |schema_migrations_table|
           schema_migrations_table.column :version, :string, :null => false
         end
-        ActiveRecord::Base.connection.add_index sm_table, :version, :unique => true, :name => "#{Base.table_name_prefix}unique_data_fixes#{Base.table_name_suffix}"
+        ActiveRecord::Base.connection.add_index sm_table, :version, :unique => true, :name => "#{ActiveRecord::Base.table_name_prefix}unique_data_fixes#{ActiveRecord::Base.table_name_suffix}"
       end
     end
   end
