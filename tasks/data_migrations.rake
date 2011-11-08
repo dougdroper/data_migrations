@@ -17,6 +17,7 @@ namespace :db do
       DataMigrations::DataMigrator.rollback(DataMigrations::DATA_MIGRATION_DIR, step)
     end
 
+    desc "Run Data Migrations"
     task :migrate => :environment do
       ActiveRecord::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
       DataMigrations::DataMigrator.migrate(DataMigrations::DATA_MIGRATION_DIR, ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
@@ -40,6 +41,19 @@ namespace :db do
         version = ActiveRecord::Base.connection.select_values("SELECT version FROM #{dm_table}").map(&:to_i).sort.max || 0
       end
       puts "Current version: #{version}"
+    end
+
+    desc "Raises an error if there are pending data migrations"
+    task :abort_if_pending_migrations => :environment do
+      pending_migrations = DataMigrations::DataMigrator.new(:up, 'db/migrate').pending_migrations
+
+      if pending_migrations.any?
+        puts "You have #{pending_migrations.size} pending migrations:"
+        pending_migrations.each do |pending_migration|
+          puts '  %4d %s' % [pending_migration.version, pending_migration.name]
+        end
+        abort %{Run "rake db:data:migrate" to update your database then try again.}
+      end
     end
   end
 
