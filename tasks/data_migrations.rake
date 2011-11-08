@@ -45,7 +45,7 @@ namespace :db do
 
     desc "Raises an error if there are pending data migrations"
     task :abort_if_pending_migrations => :environment do
-      pending_migrations = DataMigrations::DataMigrator.new(:up, 'db/migrate').pending_migrations
+      pending_migrations = DataMigrations::DataMigrator.new(:up, 'db/data_migrations').pending_migrations
 
       if pending_migrations.any?
         puts "You have #{pending_migrations.size} pending migrations:"
