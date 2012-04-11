@@ -1,4 +1,7 @@
 module DataMigrations
+  require "data_migrations/data_migrator"
+  require "data_migrations/data_migrator_tasks"
+
   # Where data migrations are stored
   DATA_MIGRATION_DIR   = "db/data_migrations"
 

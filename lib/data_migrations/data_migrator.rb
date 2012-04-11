@@ -3,12 +3,13 @@ module DataMigrations
   class DataMigrator < ActiveRecord::Migrator
     # Overrides Migrator's initialize method to make sure
     # DATA_MIGRATION_TABLE is present rather than schema_info.
-    def initialize(direction, migrations_path, target_version = nil)
+
+    def initialize(direction, migrations_paths, target_version = nil)
       raise StandardError.new("This database does not yet support migrations") unless ActiveRecord::Base.connection.supports_migrations?
       create_data_fix_table
-      @direction, @migrations_path, @target_version = direction, migrations_path, target_version      
+      @direction, @migrations_paths, @target_version = direction, migrations_paths, target_version
     end
-    
+
     # Returns the fully qualified data migration table name.
     def self.schema_migrations_table_name
       ActiveRecord::Base.table_name_prefix + DATA_MIGRATION_TABLE + ActiveRecord::Base.table_name_suffix
